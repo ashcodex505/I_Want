@@ -23,7 +23,7 @@ const SignUpPage = () => {
         const result = await signInWithPopup(auth, googleProvider);
         const user = result.user;
         console.log('User signed in with Google:', user.displayName);
-        navigate('/home');
+        navigate('/want');
       }
       catch(err) {
         console.error('Error during google sign in', err)
@@ -35,7 +35,7 @@ const SignUpPage = () => {
       // Signed in 
       const user = userCredential.user;
       console.log('User Signed In', user)
-      navigate('/home')
+      navigate('/want')
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -51,7 +51,7 @@ const SignUpPage = () => {
           // Signed up 
           const user = userCredential.user;
           console.log('User Registered:', user)
-          navigate('/home')
+          navigate('/want')
         })
         .catch((error) => {
           const errorCode = error.code;
