@@ -26,7 +26,7 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
           serializableCheck: { //don't check these actions 
-              ignoredAction: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER], //you don't interact with these actions manually redux takes caere of it .
+              ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER], //you don't interact with these actions manually redux takes caere of it .
           },
       }),
 });
