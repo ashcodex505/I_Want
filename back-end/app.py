@@ -11,9 +11,9 @@ def hello_world():
 # Takes in user specified macro, latitude, longitude
 # Surveys Google Places API for restaurants in 1 mile radius
 @app.route('/restaurants', methods=["POST"])
-def get_nearby_restaurants():
+def get_restaurants():
     data = request.get_json()
-    macro = request.get_json().get('macro')
+    macro = data.get('macro')
     latitude = data.get('latitude')
     longitude = data.get('longitude')
     radius = data.get('radius') * 1609.34 # miles to meters
@@ -46,6 +46,28 @@ def get_nearby_restaurants():
     # Return top 15 restaurants with distances 
 
     return restaurants
+
+@app.route('/dishes', methods=['POST'])
+def get_dishes():
+    data = request.get_json()
+    macro = data.get('macro')
+    restaurant = data.get('restaurant')
+
+    # Get top 15 dishes ranked by macro in given restaurant
+
+    # json object with dish name and amount of macro
+    dishes = [
+        {
+            'dish': 'balls1',
+            macro: '500'
+        },
+        {
+            'dish': 'balls2',
+            macro: '900'
+        }
+    ]
+
+    return dishes
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
