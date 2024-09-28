@@ -8,6 +8,8 @@ import { useDispatch } from "react-redux";
 import { setLogin } from "../state";
 import elipse from "../assets/Ellipse 2.png"
 import GoogleIcon from "@mui/icons-material/Google"
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "../../firebaseConfig";
 const SignUpPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -16,11 +18,47 @@ const SignUpPage = () => {
         password: ''
        
     })
-    
+    const handleGoogleSignIn = async () => {
+      try{
+        const result = await signInWithPopup(auth, googleProvider);
+        const user = result.user;
+        console.log('User signed in with Google:', user.displayName);
+        navigate('/home');
+      }
+      catch(err) {
+        console.error('Error during google sign in', err)
+      }
+    }
+    const handleSignIn = () => {
+        signInWithEmailAndPassword(auth, formData.email, formData.password)
+      .then((userCredential) => {
+      // Signed in 
+      const user = userCredential.user;
+      console.log('User Signed In', user)
+      navigate('/home')
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorMessage)
+  });
+  
+    }
     const handleSignUp = () => {
+
+      createUserWithEmailAndPassword(auth, formData.email, formData.password)
+        .then((userCredential) => {
+          // Signed up 
+          const user = userCredential.user;
+          console.log('User Registered:', user)
+          navigate('/home')
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorMessage)
+        });
         
-      
-        navigate('/home')
 
     }
     return (
@@ -105,6 +143,7 @@ const SignUpPage = () => {
           }}
         >
           <Button
+           onClick={handleSignIn}
             variant="contained"
             sx={{
               backgroundColor: '#888888',width: '200px',
@@ -119,8 +158,8 @@ const SignUpPage = () => {
           </Typography>
           </Button>
           <Button
-          onClick={handleSignUp}
          
+         onClick ={handleSignUp}
             variant="contained"
             sx={{
               backgroundColor: '#888888',
@@ -135,6 +174,7 @@ const SignUpPage = () => {
           </Typography>
           </Button>
           <Button
+          onClick={handleGoogleSignIn}
          startIcon={<GoogleIcon/>}
           variant="contained"
          
@@ -148,7 +188,7 @@ const SignUpPage = () => {
           }}
         >
           <Typography variant="h1" 
-  sx={{ fontWeight: 'bold', fontSize: '18px', color: 'white' }}>
+  sx={{ fontWeight: 'bold', fontSize: '18px', color: 'white' }} >
           Sign In with Google
           </Typography>
         </Button>
@@ -165,131 +205,7 @@ const SignUpPage = () => {
            
             
         </Grid>
-    //     <Grid
-    //   container
-    //   sx={{
-    //     height: '100vh',
-    //     background: 'linear-gradient(135deg, #555555, #444444)',
-    //     display: 'flex',
-    //     alignItems: 'center',
-    //     justifyContent: 'center',
-    //   }}
-    // >
-    //   <Grid
-        
-    //     xs={12}
-    //     sm={10}
-    //     md={8}
-    //     lg={6}
-    //     xl={4}
-    //     sx={{
-    //       backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    //       borderRadius: '20px',
-    //       padding: '40px',
-    //       textAlign: 'center',
-    //     }}
-    //   >
-    //     <Typography variant="h4" color="white" gutterBottom>
-    //       I Want
-    //     </Typography>
-    //     <Typography variant="h2" color="white" fontWeight="bold">
-    //       Find what you want
-    //     </Typography>
-
-    //     {/* Image Placeholder */}
-    //     <Box
-    //       sx={{
-    //         width: '150px',
-    //         height: '150px',
-    //         borderRadius: '50%',
-    //         backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    //         margin: '20px auto',
-    //       }}
-    //     >
-    //       {/* Placeholder for an image */}
-    //       <Typography color="white" sx={{ lineHeight: '150px' }}>
-    //         Image
-    //       </Typography>
-    //     </Box>
-
-    //     {/* Email Input */}
-    //     <TextField
-    //       fullWidth
-    //       label="Email Address"
-    //       variant="filled"
-    //       type="email"
-    //       sx={{
-    //         marginBottom: '20px',
-    //         backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    //         borderRadius: '5px',
-    //         input: { color: 'white' },
-    //         label: { color: 'rgba(255, 255, 255, 0.6)' },
-    //       }}
-    //       InputProps={{ disableUnderline: true }}
-    //     />
-
-    //     {/* Password Input */}
-    //     <TextField
-    //       fullWidth
-    //       label="Password"
-    //       variant="filled"
-    //       type="password"
-    //       sx={{
-    //         marginBottom: '20px',
-    //         backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    //         borderRadius: '5px',
-    //         input: { color: 'white' },
-    //         label: { color: 'rgba(255, 255, 255, 0.6)' },
-    //       }}
-    //       InputProps={{ disableUnderline: true }}
-    //     />
-
-    //     {/* Buttons */}
-    //     <Box
-    //       sx={{
-    //         display: 'flex',
-    //         justifyContent: 'center',
-    //         gap: '20px',
-    //         marginBottom: '20px',
-    //       }}
-    //     >
-    //       <Button
-    //         variant="contained"
-    //         sx={{
-    //           backgroundColor: '#666666',
-    //           '&:hover': { backgroundColor: '#888888' },
-    //           color: 'white',
-    //         }}
-    //       >
-    //         Login
-    //       </Button>
-    //       <Button
-    //         variant="contained"
-    //         sx={{
-    //           backgroundColor: '#666666',
-    //           '&:hover': { backgroundColor: '#888888' },
-    //           color: 'white',
-    //         }}
-    //       >
-    //         Sign Up
-    //       </Button>
-    //     </Box>
-
-    //     {/* Google Login */}
-    //     <Button
-    //       fullWidth
-    //       variant="contained"
-         
-    //       sx={{
-    //         backgroundColor: 'white',
-    //         color: 'black',
-    //         '&:hover': { backgroundColor: '#dddddd' },
-    //       }}
-    //     >
-    //       Login/Sign Up with Google
-    //     </Button>
-    //   </Grid>
-    // </Grid>
+   
 
     )
 }
