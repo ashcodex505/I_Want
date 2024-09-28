@@ -2,17 +2,16 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     user: null,
+    res: []
 }
 
 export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        setLogin: (state, action) => {
-            state.user = action.payload.user;
-        },
+        //set login is already done in firebase 
     },
 });
 
-export const {setLogin} = userSlice.actions;
+export const {} = userSlice.actions;
 export default userSlice.reducer;
