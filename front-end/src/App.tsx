@@ -2,6 +2,7 @@
 import { BrowserRouter, Navigate, Routes, Route  } from "react-router-dom"
 import { UseSelector } from "react-redux"
 import SignUpPage from "./pages/SignUpPage"
+import WhatIWant from "./pages/WhatIWant"
 import HomePage from "./pages/HomePage"
 import { CssBaseline } from "@mui/material"
 import ProtectedRoute from "./ProtectedRoute"
@@ -14,10 +15,9 @@ function App() {
       <CssBaseline/>
         <Routes>
           <Route path = "/" element = {<SignUpPage/>} />
+          <Route path = "/want" element = {<WhatIWant/>} />
           <Route path = "/home" element = {  <HomePage />
               } />
-        
- 
         </Routes>
       </BrowserRouter>
     </div>
