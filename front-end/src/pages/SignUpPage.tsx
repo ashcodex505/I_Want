@@ -23,7 +23,7 @@ const SignUpPage = () => {
         const result = await signInWithPopup(auth, googleProvider);
         const user = result.user;
         console.log('User signed in with Google:', user.displayName);
-        navigate('/home');
+        navigate('/want');
       }
       catch(err) {
         console.error('Error during google sign in', err)
@@ -35,7 +35,7 @@ const SignUpPage = () => {
       // Signed in 
       const user = userCredential.user;
       console.log('User Signed In', user)
-      navigate('/home')
+      navigate('/want')
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -51,7 +51,7 @@ const SignUpPage = () => {
           // Signed up 
           const user = userCredential.user;
           console.log('User Registered:', user)
-          navigate('/home')
+          navigate('/want')
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -89,10 +89,10 @@ const SignUpPage = () => {
                         borderColor: '#fff', // Default border color
                       },
                       '&:hover fieldset': {
-                        borderColor: '#ff8c00', // Border color when hovering
+                        borderColor: '#fff', // Border color when hovering
                       },
                       '&.Mui-focused fieldset': {
-                        borderColor: '#ff8c00', // Border color when focused
+                        borderColor: '#fff', // Border color when focused
                       },
                     },}}
                     id= 'text'
@@ -116,10 +116,10 @@ const SignUpPage = () => {
                        borderColor: '#fff', // Default border color
                      },
                      '&:hover fieldset': {
-                       borderColor: '#ff8c00', // Border color when hovering
+                       borderColor: '#fff', // Border color when hovering
                      },
                      '&.Mui-focused fieldset': {
-                       borderColor: '#ff8c00', // Border color when focused
+                       borderColor: '#fff', // Border color when focused
                      },
                    },}}
                    id= 'text'
@@ -146,14 +146,14 @@ const SignUpPage = () => {
            onClick={handleSignIn}
             variant="contained"
             sx={{
-              backgroundColor: '#888888',width: '200px',
+              backgroundColor: '#516285',width: '200px',
               height: '40px',
-              '&:hover': { backgroundColor: '#888888' },
-              color: 'white',
+              '&:hover': { backgroundColor: '#dddddd' },
+              color: '#516285',
             }}
           >
             <Typography variant="h1" 
-  sx={{ fontWeight: 'bold', fontSize: '18px', color: 'white' }}>
+  sx={{ fontWeight: 'bold', fontSize: '18px', color: 'white'}}>
           Log In 
           </Typography>
           </Button>
@@ -162,8 +162,8 @@ const SignUpPage = () => {
          onClick ={handleSignUp}
             variant="contained"
             sx={{
-              backgroundColor: '#888888',
-              '&:hover': { backgroundColor: '#888888' },
+              backgroundColor: '#516285',
+              '&:hover': { backgroundColor: '#dddddd' },
               color: 'white',width: '200px',
               height: '40px',
             }}
@@ -181,7 +181,7 @@ const SignUpPage = () => {
           sx={{
             fontSize: '10px',
             fontStyle: 'Inter',
-            backgroundColor: '#888888',
+            backgroundColor: '#516285',
             color: 'black', width: '300px',
             height: '40px', border: '1px solid gray',
             '&:hover': { backgroundColor: '#dddddd' }, 

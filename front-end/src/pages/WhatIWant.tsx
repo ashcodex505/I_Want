@@ -1,6 +1,8 @@
 import {Button, ToggleButton, ToggleButtonGroup, Grid2, Typography} from '@mui/material';
+import { signOut } from 'firebase/auth';
 import {useState} from 'react';
-
+import { useNavigate } from 'react-router-dom';
+import {auth} from '../../firebaseConfig'
 
    
 
@@ -14,13 +16,39 @@ const WhatIWant = () =>
         ) => {
             setSelectedButton(newSelection);
         }
+        const navigate = useNavigate();
+    const handleSignOut = async () => {
+        try {
+          await signOut(auth);
+          console.log('User signed out');
+          navigate('/')
+        } catch (error) {
+          console.error('Error signing out:', error);
+        }
+      };
         return(
             <>
-            <Typography variant = "h4" sx={{textAlign: 'center', marginTop: '100px'}}>I Want ___________________</Typography>
+            <Button
+           onClick ={handleSignOut}
+            variant="contained"
+            sx={{
+              backgroundColor: '#516285',width: '200px',
+              height: '40px',
+              '&:hover': { backgroundColor: '#dddddd' },
+              color: 'white',
+            }}
+          >
+            <Typography variant="h1" 
+  sx={{ fontWeight: 'bold', fontSize: '18px', color: 'white' }}>
+          Sign Out
+          </Typography>
+          </Button>
+            <Typography variant = "h4" sx={{textAlign: 'center', marginTop: '100px', color: 'white', fontSize: '46px', fontStyle: 'Inter'}}>I Want ___________________</Typography>
 
             <div style={{ padding: '20px' }}>
             <Grid2 container spacing = {10} justifyContent = "center">
                 <ToggleButtonGroup
+               
                     value={selectedButton}
                     exclusive
                     onChange={handleButtonClick}
@@ -32,7 +60,11 @@ const WhatIWant = () =>
                         key={buttonNumber}
                         value={buttonNumber}
                         aria-label={`${buttonNumber}`}
-                        sx={{ margin: '0 10px', width: '150px', padding: '10px 0' }}
+                        sx={{ margin: '0 10px', width: '150px', padding: '10px 0', color: 'white', borderColor: 'white ',  
+                            '&.Mui-selected': {
+                                backgroundColor: '#516285',
+                            }
+                        }}
                     >
                         {buttonNumber}
                     </ToggleButton>

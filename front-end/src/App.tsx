@@ -10,7 +10,13 @@ function App() {
   
 
   return (
-    <div className="app" style={{backgroundColor: '#282828' , height: '100vh', width: '100vw', margin: 0, padding: 0   }}>
+    <div className="app"  style={{
+      height: '100vh',
+      width: '100vw',
+      margin: 0,
+      padding: 0,
+      backgroundColor: '#819DDA', // Set the background color here
+    }} >
       <BrowserRouter>
       <CssBaseline/>
         <Routes>
