@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     user: null,
     macro: null,
+    restaurants: null
 }
 
 export const userSlice = createSlice({
@@ -11,10 +12,13 @@ export const userSlice = createSlice({
     reducers: {
         setMacro: (state,action) => {
             state.macro = action.payload.macro
+        },
+        setRestaurants: (state,action) => {
+            state.restaurants = action.payload
         }
         //set login is already done in firebase 
     },
 });
 
-export const {setMacro} = userSlice.actions;
+export const {setMacro, setRestaurants} = userSlice.actions;
 export default userSlice.reducer;

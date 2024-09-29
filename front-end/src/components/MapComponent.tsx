@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { GoogleMap, LoadScript, Marker, StandaloneSearchBox, Box } from '@react-google-maps/api';
 import { Button, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setRestaurants } from '../state';
+
 // Typescript types
 interface Coordinates {
   lat: number;
@@ -12,10 +16,14 @@ const mapOptions = {
     zoomControl: true, // Optionally keep zoom control
     streetViewControl: false, // Remove street view control
     mapTypeControl: false, // Remove map type control (satellite)
-    fullscreenControl: false, // Remove full screen control
+    fullscreenControl: false, // Remove full screen control  
 };
 
 const MapWithGeolocation: React.FC = () => {
+    
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const restaurants = useSelector((state)=> state.restaurants)
     const [currentPosition, setCurrentPosition] = useState<Coordinates | null>(null);
     // const [selectedPosition, setSelectedPosition] = useState<Coordinates | null>(null);
     const [searchBox, setSearchBox] = useState<google.maps.places.SearchBox | null>(null);
@@ -68,8 +76,10 @@ const MapWithGeolocation: React.FC = () => {
       height: '80vh',
       width: '100%',
     };
+    const [loading, setLoading] = useState(0);
     const handleRequest = async () => {
       try {
+        setLoading(1);
         const savedRestaurantResponse = await fetch(
           "http://127.0.0.1:5000/restaurants",
           {
@@ -89,7 +99,12 @@ const MapWithGeolocation: React.FC = () => {
         const savedRestaurants = await savedRestaurantResponse.json();
         if(savedRestaurantResponse.ok){
           console.log(savedRestaurants);
+          dispatch(
+            setRestaurants(savedRestaurants)
+          )
           console.log('Success')
+          console.log(restaurants)
+          navigate('/restaurant')
         }
         else{
           console.error('Error:', savedRestaurants);
@@ -103,6 +118,7 @@ const MapWithGeolocation: React.FC = () => {
     const defaultCenter = currentPosition || { lat: 40.7128, lng: -74.006 };
   
     return (
+      <>
       <LoadScript googleMapsApiKey={googleMapsApiKey} libraries={['places']}>
         <div>
           <div style = {{position: 'absolute', left: '138px', top: '155px', height: '100px'}}>
@@ -166,14 +182,16 @@ const MapWithGeolocation: React.FC = () => {
           >
             
             <Typography variant="h1" 
-  sx={{ fontWeight: 'bold', fontSize: '18px', color: 'white'
-   }}>
-          Search
+  sx={{ fontWeight: 'bold', fontSize: '18px', color: 'white' }}>
+          {loading === 1 ? 'Loading...' : 'Search'}
           </Typography>
           </Button>
           </div>
         </div>
       </LoadScript>
+      
+      </>
+      
     );
   };
   

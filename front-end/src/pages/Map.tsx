@@ -48,8 +48,6 @@ const MapPage = ( ) => {
           >
             Go Back
           </Button>
-        {/* </Box> */}
-        
         <Typography sx={{ marginTop: 2, textAlign: 'center' }}>
           {macro}
         </Typography>
