@@ -88,7 +88,7 @@ def add_nutrition_information():
 
     return jsonify({"message": "Nutrition Facts added successfully"}), 201
 
-@app.route('get_protein')
+# @app.route('get_protein')
 
 
 if __name__ == '__main__':
