@@ -6,6 +6,7 @@ import Location from '../assets/Location.png'
 import { setMeals, setRestaurant } from "../state";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import SignOut from "../components/SignOutButton";
 const Restaurant = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -58,6 +59,7 @@ const Restaurant = () => {
     }
     return ( 
         <>
+        <SignOut/>
              
             <Grid container alignItems = 'center' spacing={2} direction={'column'} mt={10}>
             <Box 
@@ -109,13 +111,20 @@ const Restaurant = () => {
               {/* Text */}
               <Grid container direction={'column'} alignItems='flex-start' >
                 <Grid>
+                  <Grid container direction={'row'}>
                 <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                  {state.name}
+                  {state.name} 
                 </Typography>
+                <Typography variant="body2" sx={{marginLeft: 2, marginTop: 0.6}}>
+                  {/* {state.distance} <span style={{ marginLeft: '15px' }}>{state.duration}</span> */}
+                  {state.duration}
+                </Typography>
+                </Grid>
                 </Grid>
                 <Grid>
                 <Typography variant="body2">
-                  {state.distance} <span style={{ marginLeft: '15px' }}>{state.duration}</span>
+                  {/* {state.distance} <span style={{ marginLeft: '15px' }}>{state.duration}</span> */}
+                  {state.address} <span style={{position: 'absolute', right: 25}}>{state.distance}</span>
                 </Typography>
                 </Grid>
               </Grid>

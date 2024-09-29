@@ -175,6 +175,7 @@ const MapWithGeolocation: React.FC = () => {
          onClick ={handleRequest}
             variant="outlined"
             sx={{
+              backgroundColor: 'black',
               '&:hover': { backgroundColor: '#CDD8F1' },
               color: 'white',width: '200px',
               height: '40px', border: '2px solid white'

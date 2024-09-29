@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { setMacro } from '../state';
 import myImage from '../assets/IWant_transparentnewnew.png';
+import SignOut from '../components/SignOutButton';
 
 
 const WhatIWant = () => 
@@ -49,23 +50,7 @@ const WhatIWant = () =>
                 background: 'linear-gradient(130deg, #819dda, #d9d9d9)',
                 height: '100vh'
               }}>
-            <Grid2 container justifyContent={"flex-end"}>
-            <Button
-           onClick ={handleSignOut}
-            variant="outlined"
-            sx={{
-              border: '1px solid white', width: '200px', marginTop: '30px', 
-              marginRight: '100px',
-              '&:hover': { backgroundColor: '#88a2da' },
-              color: 'white',
-            }}
-          >
-            <Typography variant="h1" 
-  sx={{ fontSize: '18px', color: 'white', fontWeight: 'small' }}>
-          Sign Out
-          </Typography>
-          </Button>
-          </Grid2>
+            <SignOut/>
             <div>
               <Box sx = {{position: 'absolute', top: 30, left: 100}}>
                 <img src ={myImage}></img>

@@ -5,19 +5,11 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import MapWithGeolocation from "../components/MapComponent";
 import myImage from '../assets/IWant_transparentnewnew.png';
-
+import SignOut from "../components/SignOutButton";
 const MapPage = ( ) => {
     const macro = useSelector((state)=> state.macro)
     const navigate = useNavigate();
-    const handleSignOut = async () => {
-        try {
-          await signOut(auth);
-          console.log('User signed out');
-          navigate('/')
-        } catch (error) {
-          console.error('Error signing out:', error);
-        }
-      };
+   
     return (
         <>
         {/* <Box
@@ -36,6 +28,7 @@ const MapPage = ( ) => {
           <Box sx = {{position: 'absolute', top: 30, left: 100}}>
             <img src ={myImage}></img>
           </Box>
+          <SignOut/>
         </div>
         <MapWithGeolocation />
 
