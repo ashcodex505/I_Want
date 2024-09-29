@@ -8,6 +8,7 @@ import { CssBaseline } from "@mui/material"
 import ProtectedRoute from "./ProtectedRoute"
 import MapPage from "./pages/Map"
 import Restaurant from "./pages/Restaurant"
+import MealsPage from "./pages/MealsPage"
 function App() {
   
 
@@ -27,6 +28,7 @@ function App() {
       
             <Route path = "/map" element = {<MapPage/>}/>
             <Route path = "/restaurant" element = {<Restaurant/>} />
+            <Route path ="/meals" element= {<MealsPage/>}/>
         </Routes>
       </BrowserRouter>
     </div>
