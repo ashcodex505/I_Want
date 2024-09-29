@@ -45,20 +45,23 @@ const WhatIWant = () =>
         }
       };
         return(
-            <>
+            <Box sx = {{
+                background: 'linear-gradient(130deg, #819dda, #d9d9d9)',
+                height: '100vh'
+              }}>
             <Grid2 container justifyContent={"flex-end"}>
             <Button
            onClick ={handleSignOut}
-            variant="contained"
+            variant="outlined"
             sx={{
-              backgroundColor: '#516285',width: '200px', marginTop: '30px', 
+              border: '1px solid white', width: '200px', marginTop: '30px', 
               marginRight: '100px',
-              '&:hover': { backgroundColor: '#dddddd' },
+              '&:hover': { backgroundColor: '#88a2da' },
               color: 'white',
             }}
           >
             <Typography variant="h1" 
-  sx={{ fontSize: '18px', color: 'white' }}>
+  sx={{ fontSize: '18px', color: 'white', fontWeight: 'small' }}>
           Sign Out
           </Typography>
           </Button>
@@ -87,9 +90,10 @@ const WhatIWant = () =>
                         value={buttonNumber}
                         aria-label={`${buttonNumber}`}
                         sx={{ margin: '0 10px', width: '150px', padding: '10px 0', color: 'white', borderColor: 'white ',  
+                            '&:hover': { backgroundColor: '#CDD8F1' }, 
                             '&.Mui-selected': {
-                                backgroundColor: '#516285',
-                            }
+                                backgroundColor: '#9CB2E0'
+                              }
                         }}
                     >
                         {buttonNumber}
@@ -104,17 +108,17 @@ const WhatIWant = () =>
             <Grid2 container justifyContent={'center'}>
                 <Button
                 onClick={handleNext}
-                    variant="contained"
+                    variant="outlined"
                     disabled={selectedButton === null}
-                    style={{ marginTop: '110px', textAlign: 'center',
-                        backgroundColor: '#576789'
+                    sx={{ marginTop: '110px', textAlign: 'center', 
+                        border: '2px solid white', color: 'white', '&:hover': { backgroundColor: '#CDD8F1' }
                      }}
-                >
+                    >
                     Go to Next Page
                 </Button>
             </Grid2>
             </div>
-            </>
+            </Box>
         )
         
     }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { GoogleMap, LoadScript, Marker, StandaloneSearchBox } from '@react-google-maps/api';
+import { GoogleMap, LoadScript, Marker, StandaloneSearchBox, Box } from '@react-google-maps/api';
 import { Button, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -88,7 +88,7 @@ const MapWithGeolocation: React.FC = () => {
               "Content-Type": "application/json", // Ensure the correct header is set
             },
             body: JSON.stringify({
-              'macro': macro,
+              'macro': macro, 
               "latitude": currentPosition.lat,
               "longitude": currentPosition.lng,
               "radius": 1
@@ -121,6 +121,7 @@ const MapWithGeolocation: React.FC = () => {
       <>
       <LoadScript googleMapsApiKey={googleMapsApiKey} libraries={['places']}>
         <div>
+          <div style = {{position: 'absolute', left: '138px', top: '155px', height: '100px'}}>
           <StandaloneSearchBox
             onLoad={onSearchBoxLoad}
             onPlacesChanged={handlePlacesChanged}
@@ -142,7 +143,19 @@ const MapWithGeolocation: React.FC = () => {
               }}
             />
           </StandaloneSearchBox>
-  
+          </div>
+              
+          <div
+          style={{
+            width: '80%',
+            maxWidth: '1400px',
+            height: '400px',
+            margin: '200px auto',
+            border: '2px solid #ccc',
+            borderRadius: '0px',
+            overflow: 'hidden',
+          }}
+        >
           <GoogleMap
             mapContainerStyle={mapStyles}
             zoom={15}
@@ -150,25 +163,30 @@ const MapWithGeolocation: React.FC = () => {
             onClick={handleMapClick}
             options={mapOptions}
           >
+            
             {currentPosition && <Marker position={defaultCenter} />}
             {/* {selectedPosition && <Marker position={selectedPosition} />} */}
           </GoogleMap>
+          </div>
+
+          <div style = {{position: 'absolute', left: '578px', top: '622px', height: '100px'}}>
           <Button
          
          onClick ={handleRequest}
-            variant="contained"
+            variant="outlined"
             sx={{
-              backgroundColor: '#516285',
-              '&:hover': { backgroundColor: '#dddddd' },
+              '&:hover': { backgroundColor: '#CDD8F1' },
               color: 'white',width: '200px',
-              height: '40px',
+              height: '40px', border: '2px solid white'
             }}
           >
+            
             <Typography variant="h1" 
   sx={{ fontWeight: 'bold', fontSize: '18px', color: 'white' }}>
           {loading === 1 ? 'Loading...' : 'Search'}
           </Typography>
           </Button>
+          </div>
         </div>
       </LoadScript>
       
