@@ -1,16 +1,17 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
+import os
 
 app = Flask(__name__)
 
 # Configuring the SQLAlchemy part of the app
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost/mydb'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://example_user:example_password@flask_db:5432/example_db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Creating the SQLAlchemy db instance
 db = SQLAlchemy(app)
 
-# Define the NutritionFacts model
+# Define the NutritionFacts model without any foreign key relationships
 class NutritionFacts(db.Model):
     __tablename__ = 'nutrition_facts'
 
@@ -22,12 +23,11 @@ class NutritionFacts(db.Model):
     dietary_fiber_g = db.Column(db.Numeric(5, 2), nullable=False)  # Dietary fiber in grams
     protein_g = db.Column(db.Integer, nullable=False)  # Protein in grams
 
-# Define the RestaurantInformation model
+# Define the RestaurantInformation model without any foreign key relationships
 class RestaurantInformation(db.Model):
     __tablename__ = 'restaurant_information'
 
-    nutrition_id = db.Column(db.Integer, primary_key=True)  # Unique identifier
-    restaurant_id = db.Column(db.Integer, db.ForeignKey('nutrition_facts.nutrition_facts_id'), nullable=False)  # Foreign key referencing nutrition_facts
+    restaurant_id = db.Column(db.Integer, primary_key=True)  # Unique identifier
     restaurant_name = db.Column(db.String(100), nullable=False)  # Name of the restaurant
     calories_per_dollar = db.Column(db.Numeric(5, 2), nullable=True)  # Calories per dollar
     carbs_g = db.Column(db.Integer, nullable=True)  # Carbohydrates in grams
@@ -39,12 +39,38 @@ with app.app_context():
     db.create_all()
 
 @app.route('/')
-def hello_world():
-    return 'Hello, World!'
+def index():
+    return 'Hello, world!'
 
 @app.route('/nutrition_facts', methods=['GET'])
 def get_nutrition_facts():
-    print('Getting nutrition facts')
+    return jsonify([{
+        'item': 'test',
+        'restaurant_name': 'test',
+        'calories': 0,
+        'carbohydrates_g': 0,
+        'dietary_fiber_g': 0,
+        'protein_g': 0
+    }]), 200
+
+@app.route('/load_restaurant', methods=['POST'])
+def add_restaurant_information():
+    data = request.get_json()
+
+    # Insert restaurant information without foreign key dependency
+    restaurant_info = RestaurantInformation(
+        restaurant_name=data['restaurant_name'],
+        calories_per_dollar=data.get('calories_per_dollar'),
+        carbs_g=data.get('carbs_g'),
+        protein_g=data.get('protein_g'),
+        fiber_g=data.get('fiber_g')
+    )
+
+    db.session.add(restaurant_info)
+    db.session.commit()
+
+    return jsonify({"message": "Restaurant Information added successfully"}), 201
+
 
 if __name__ == '__main__':
     app.run(debug=True)
