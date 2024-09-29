@@ -2,7 +2,7 @@ import { signOut } from "firebase/auth"
 import {auth} from '../../firebaseConfig'
 import { Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-const HomePage = ( ) => {
+const MapPage = ( ) => {
     const navigate = useNavigate();
     const handleSignOut = async () => {
         try {
@@ -20,4 +20,4 @@ const HomePage = ( ) => {
         </>
     )
 }
-export default HomePage
+export default MapPage
