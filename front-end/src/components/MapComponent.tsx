@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { GoogleMap, LoadScript, Marker, StandaloneSearchBox } from '@react-google-maps/api';
 import { Button, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setRestaurants } from '../state';
+
 // Typescript types
 interface Coordinates {
   lat: number;
@@ -12,10 +16,13 @@ const mapOptions = {
     zoomControl: true, // Optionally keep zoom control
     streetViewControl: false, // Remove street view control
     mapTypeControl: false, // Remove map type control (satellite)
-    fullscreenControl: false, // Remove full screen control
+    fullscreenControl: false, // Remove full screen control  
 };
 
 const MapWithGeolocation: React.FC = () => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const restaurants = useSelector((state)=> state.restaurants)
     const [currentPosition, setCurrentPosition] = useState<Coordinates | null>(null);
     // const [selectedPosition, setSelectedPosition] = useState<Coordinates | null>(null);
     const [searchBox, setSearchBox] = useState<google.maps.places.SearchBox | null>(null);
@@ -89,7 +96,12 @@ const MapWithGeolocation: React.FC = () => {
         const savedRestaurants = await savedRestaurantResponse.json();
         if(savedRestaurantResponse.ok){
           console.log(savedRestaurants);
+          dispatch(
+            setRestaurants(savedRestaurants)
+          )
           console.log('Success')
+          console.log(restaurants)
+          navigate('/restaurant')
         }
         else{
           console.error('Error:', savedRestaurants);
