@@ -3,6 +3,8 @@ import {auth} from '../../firebaseConfig'
 import { Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import MapWithGeolocation from "../components/MapComponent";
+
 const MapPage = ( ) => {
     const macro = useSelector((state)=> state.macro)
     const navigate = useNavigate();
@@ -17,6 +19,8 @@ const MapPage = ( ) => {
       };
     return (
         <>
+        <MapWithGeolocation />
+        
         <Typography>
           {macro}
         </Typography>
