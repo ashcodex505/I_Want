@@ -26,7 +26,8 @@ def get_restaurants():
     restaurants = [
                     {
                         'name': place['name'], 
-                        'location': place['geometry']['location']
+                        'location': place['geometry']['location'],
+                        'address': place['vicinity']
                     }
                     for place in response['results'] 
                     if not place.get('permanently_closed', False)
@@ -43,7 +44,7 @@ def get_restaurants():
 
     for i in range(len(restaurants)):
         info = googlemaps.get_travel_distance(user_lat=latitude, user_lng=longitude, dest_lat=restaurants[i]['location']['lat'], dest_lng=restaurants[i]['location']['lng'])
-        restaurants[i] = {'name': restaurants[i]['name'], 'distance': info['distance'], 'duration': info['duration']}
+        restaurants[i] = {'name': restaurants[i]['name'], 'address': restaurants[i]['address'], 'distance': info['distance'], 'duration': info['duration']}
 
     # Return top 15 restaurants with distances 
 
