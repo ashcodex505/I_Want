@@ -28,3 +28,7 @@ dist-ssr
 __pycache__/
 
 scraper/
+
+
+/back-end/database/data/
+back-end/database/data/

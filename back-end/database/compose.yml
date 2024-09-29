@@ -1,28 +1,29 @@
-# make me a copose file for the back-end using postgres for the database
+version: '3.8'
 
 services:
-  db:
-    image: postgres:latest
-    restart: always
+  flask_app:
+    container_name: flask_app
+    image: abhaveabhilash/flask_app:latest
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - flask_db
     environment:
-      POSTGRES_USER: abhave
-      POSTGRES_PASSWORD: hackathon
-      POSTGRES_DB: testdb
+      - DATABASE_URL=postgresql://example_user:example_password@flask_db:5432/example_db
+
+  flask_db:
+    container_name: flask_db
+    image: postgres:13
+    environment:
+      POSTGRES_USER: example_user
+      POSTGRES_PASSWORD: example_password
+      POSTGRES_DB: example_db
+    volumes:
+      - ./data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
-#  web:
-#    image: postgres:latest
-#    restart: always
-#    depends_on:
-#      - db
-#    environment:
-#      DB_HOST: db
-#      DB_PORT: 5432
-#      DB_USER: exampleuser
-#      DB_PASSWORD: examplepass
-#      DB_NAME: exampledb
-#    ports:
-#      - "8000:8000"
 
-version: '3.1'
+volumes:
+  data: {}
