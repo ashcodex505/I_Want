@@ -28,6 +28,7 @@ const WhatIWant = () =>
                     macro: selectedButton
                 })
             )
+            navigate('/map')
             
 
         }
