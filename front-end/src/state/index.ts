@@ -2,17 +2,19 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     user: null,
+    macro: null,
 }
 
 export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        setLogin: (state, action) => {
-            state.user = action.payload.user;
-        },
+        setMacro: (state,action) => {
+            state.macro = action.payload.macro
+        }
+        //set login is already done in firebase 
     },
 });
 
-export const {setLogin} = userSlice.actions;
+export const {setMacro} = userSlice.actions;
 export default userSlice.reducer;

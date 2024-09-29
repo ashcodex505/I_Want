@@ -1,0 +1,41 @@
+{
+	"info": {
+		"_postman_id": "21fdaf77-882f-4bb6-93ab-8acce95e9a4f",
+		"name": "Python Flask Backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38194672"
+	},
+	"item": [
+		{
+			"name": "Get Nearby Restaurants",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"latitude\":33.415432,\r\n    \"longitude\":-111.932699,\r\n    \"radius\":1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/restaurants",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"restaurants"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

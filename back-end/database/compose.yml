@@ -1,0 +1,28 @@
+# make me a copose file for the back-end using postgres for the database
+
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: abhave
+      POSTGRES_PASSWORD: hackathon
+      POSTGRES_DB: testdb
+    ports:
+      - "5432:5432"
+
+#  web:
+#    image: postgres:latest
+#    restart: always
+#    depends_on:
+#      - db
+#    environment:
+#      DB_HOST: db
+#      DB_PORT: 5432
+#      DB_USER: exampleuser
+#      DB_PASSWORD: examplepass
+#      DB_NAME: exampledb
+#    ports:
+#      - "8000:8000"
+
+version: '3.1'
