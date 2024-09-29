@@ -1,4 +1,4 @@
-import {Button, ToggleButton, ToggleButtonGroup, Grid2, Typography} from '@mui/material';
+import {Button, ToggleButton, ToggleButtonGroup, Grid2, Typography, Box} from '@mui/material';
 import { signOut } from 'firebase/auth';
 import {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -6,10 +6,13 @@ import {auth} from '../../firebaseConfig'
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { setMacro } from '../state';
+import myImage from '../assets/IWant_transparentnewnew.png';
+
 
 const WhatIWant = () => 
     {
         const dispatch = useDispatch();
+        //Dont worry about red line under state, error unimportant
         const macro = useSelector((state)=>state.macro)
         const [selectedButton, setSelectedButton] = useState<number | null>(null); // Track the selected button
         const options = ['Protein', 'Carbs', 'Low-Fat', 'Calories/$', '?'];
@@ -43,23 +46,31 @@ const WhatIWant = () =>
       };
         return(
             <>
+            <Grid2 container justifyContent={"flex-end"}>
             <Button
            onClick ={handleSignOut}
             variant="contained"
             sx={{
-              backgroundColor: '#516285',width: '200px',
-              height: '40px',
+              backgroundColor: '#516285',width: '200px', marginTop: '30px', 
+              marginRight: '100px',
               '&:hover': { backgroundColor: '#dddddd' },
               color: 'white',
             }}
           >
             <Typography variant="h1" 
-  sx={{ fontWeight: 'bold', fontSize: '18px', color: 'white' }}>
+  sx={{ fontSize: '18px', color: 'white' }}>
           Sign Out
           </Typography>
           </Button>
-            <Typography variant = "h4" sx={{textAlign: 'center', marginTop: '100px', color: 'white', fontSize: '46px', fontStyle: 'Inter'}}>I Want ___________________</Typography>
+          </Grid2>
+            <div>
+              <Box sx = {{position: 'absolute', top: 30, left: 100}}>
+                <img src ={myImage}></img>
+              </Box>
+            </div>
+            <Typography variant = "h4" sx={{textAlign: 'center', fontWeight: 'bold', marginTop: '100px', color: 'white', fontSize: '46px', fontStyle: 'Inter'}}>I Want ___________________</Typography>
 
+            
             <div style={{ padding: '20px' }}>
             <Grid2 container spacing = {10} justifyContent = "center">
                 <ToggleButtonGroup
@@ -95,7 +106,9 @@ const WhatIWant = () =>
                 onClick={handleNext}
                     variant="contained"
                     disabled={selectedButton === null}
-                    style={{ marginTop: '20px', textAlign: 'center' }}
+                    style={{ marginTop: '110px', textAlign: 'center',
+                        backgroundColor: '#576789'
+                     }}
                 >
                     Go to Next Page
                 </Button>
