@@ -170,7 +170,6 @@ const SignUpPage = () => {
           </Typography>
           </Button>
           <Button
-         
          onClick ={handleSignUp}
             variant="contained"
             sx={{
