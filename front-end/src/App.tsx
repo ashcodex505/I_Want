@@ -3,9 +3,10 @@ import { BrowserRouter, Navigate, Routes, Route  } from "react-router-dom"
 import { UseSelector } from "react-redux"
 import SignUpPage from "./pages/SignUpPage"
 import WhatIWant from "./pages/WhatIWant"
-import HomePage from "./pages/HomePage"
+import HomePage from "./pages/Map"
 import { CssBaseline } from "@mui/material"
 import ProtectedRoute from "./ProtectedRoute"
+import MapPage from "./pages/Map"
 function App() {
   
 
@@ -22,8 +23,8 @@ function App() {
         <Routes>
           <Route path = "/" element = {<SignUpPage/>} />
           <Route path = "/want" element = {<WhatIWant/>} />
-          <Route path = "/home" element = {  <HomePage />
-              } />
+      
+            <Route path = "/map" element = {<MapPage/>}/>
         </Routes>
       </BrowserRouter>
     </div>

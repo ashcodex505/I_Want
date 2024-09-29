@@ -3,20 +3,35 @@ import { signOut } from 'firebase/auth';
 import {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import {auth} from '../../firebaseConfig'
-
-   
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { setMacro } from '../state';
 
 const WhatIWant = () => 
     {
+        const dispatch = useDispatch();
+        const macro = useSelector((state)=>state.macro)
         const [selectedButton, setSelectedButton] = useState<number | null>(null); // Track the selected button
-
+        const options = ['Protein', 'Carbs', 'Low-Fat', 'Calories/$', '?'];
         const handleButtonClick = (
             event: React.MouseEvent<HTMLElement>,   
             newSelection: number | null
         ) => {
             setSelectedButton(newSelection);
         }
+
         const navigate = useNavigate();
+        const handleNext = () => {
+            console.log(selectedButton)
+            dispatch(
+                setMacro({
+                    macro: selectedButton
+                })
+            )
+            navigate('/map')
+            
+
+        }
     const handleSignOut = async () => {
         try {
           await signOut(auth);
@@ -55,7 +70,7 @@ const WhatIWant = () =>
                     aria-label="button selection"
                 >
                     <Grid2 container spacing = {2}>
-                    {['Protein', 'Carbs', 'Low-Fat', 'Calories/$', '?'].map((buttonNumber) => (
+                    {options.map((buttonNumber) => (
                     <ToggleButton
                         key={buttonNumber}
                         value={buttonNumber}
@@ -77,6 +92,7 @@ const WhatIWant = () =>
             {/* Button 6 - Proceed to Next Page */}
             <Grid2 container justifyContent={'center'}>
                 <Button
+                onClick={handleNext}
                     variant="contained"
                     disabled={selectedButton === null}
                     style={{ marginTop: '20px', textAlign: 'center' }}
