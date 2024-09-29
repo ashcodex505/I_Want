@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { GoogleMap, LoadScript, Marker, StandaloneSearchBox } from '@react-google-maps/api';
-
+import { Button, Typography } from '@mui/material';
+import { useSelector } from 'react-redux';
 // Typescript types
 interface Coordinates {
   lat: number;
@@ -16,11 +17,10 @@ const mapOptions = {
 
 const MapWithGeolocation: React.FC = () => {
     const [currentPosition, setCurrentPosition] = useState<Coordinates | null>(null);
-    const [selectedPosition, setSelectedPosition] = useState<Coordinates | null>(null);
+    // const [selectedPosition, setSelectedPosition] = useState<Coordinates | null>(null);
     const [searchBox, setSearchBox] = useState<google.maps.places.SearchBox | null>(null);
-
     const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-  
+    const macro = useSelector((state)=> state.macro);
     useEffect(() => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -29,6 +29,7 @@ const MapWithGeolocation: React.FC = () => {
             lat: latitude,
             lng: longitude,
           });
+          // setSelectedPosition(currentPosition)
         },
         (error) => console.log(error),
         { enableHighAccuracy: true }
@@ -37,11 +38,12 @@ const MapWithGeolocation: React.FC = () => {
   
     const handleMapClick = (event: google.maps.MapMouseEvent) => {
       if (event.latLng) {
-        setSelectedPosition({
+        setCurrentPosition({
           lat: event.latLng.lat(),
           lng: event.latLng.lng(),
         });
       }
+      // console.log(selectedPosition?.lat, selectedPosition?.lng);
     };
   
     const handlePlacesChanged = () => {
@@ -49,12 +51,13 @@ const MapWithGeolocation: React.FC = () => {
       if (places && places.length > 0) {
         const location = places[0].geometry?.location;
         if (location) {
-          setSelectedPosition({
+          setCurrentPosition({
             lat: location.lat(),
             lng: location.lng(),
           });
         }
       }
+      // console.log(selectedPosition?.lat, selectedPosition?.lng);
     };
   
     const onSearchBoxLoad = (ref: google.maps.places.SearchBox) => {
@@ -65,6 +68,37 @@ const MapWithGeolocation: React.FC = () => {
       height: '80vh',
       width: '100%',
     };
+    const handleRequest = async () => {
+      try {
+        const savedRestaurantResponse = await fetch(
+          "http://127.0.0.1:5000/restaurants",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json", // Ensure the correct header is set
+            },
+            body: JSON.stringify({
+              'macro': macro,
+              "latitude": currentPosition.lat,
+              "longitude": currentPosition.lng,
+              "radius": 1
+
+            }),
+          }
+        );
+        const savedRestaurants = await savedRestaurantResponse.json();
+        if(savedRestaurantResponse.ok){
+          console.log(savedRestaurants);
+          console.log('Success')
+        }
+        else{
+          console.error('Error:', savedRestaurants);
+        }
+        
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
   
     const defaultCenter = currentPosition || { lat: 40.7128, lng: -74.006 };
   
@@ -100,9 +134,25 @@ const MapWithGeolocation: React.FC = () => {
             onClick={handleMapClick}
             options={mapOptions}
           >
-            {currentPosition && <Marker position={currentPosition} />}
-            {selectedPosition && <Marker position={selectedPosition} />}
+            {currentPosition && <Marker position={defaultCenter} />}
+            {/* {selectedPosition && <Marker position={selectedPosition} />} */}
           </GoogleMap>
+          <Button
+         
+         onClick ={handleRequest}
+            variant="contained"
+            sx={{
+              backgroundColor: '#516285',
+              '&:hover': { backgroundColor: '#dddddd' },
+              color: 'white',width: '200px',
+              height: '40px',
+            }}
+          >
+            <Typography variant="h1" 
+  sx={{ fontWeight: 'bold', fontSize: '18px', color: 'white' }}>
+          Search
+          </Typography>
+          </Button>
         </div>
       </LoadScript>
     );
