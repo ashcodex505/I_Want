@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import googlemaps
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/')
 def hello_world():
@@ -17,14 +19,15 @@ def get_restaurants():
     latitude = data.get('latitude')
     longitude = data.get('longitude')
     radius = data.get('radius') * 1609.34 # miles to meters
-    
+    print(data)
     # Survey Google Places API for restaurants in radius
     response = googlemaps.get_nearby_restaurants(latitude=latitude, longitude=longitude, radius=radius)
 
     restaurants = [
                     {
                         'name': place['name'], 
-                        'location': place['geometry']['location']
+                        'location': place['geometry']['location'],
+                        'address': place['vicinity']
                     }
                     for place in response['results'] 
                     if not place.get('permanently_closed', False)
@@ -41,7 +44,7 @@ def get_restaurants():
 
     for i in range(len(restaurants)):
         info = googlemaps.get_travel_distance(user_lat=latitude, user_lng=longitude, dest_lat=restaurants[i]['location']['lat'], dest_lng=restaurants[i]['location']['lng'])
-        restaurants[i] = {'name': restaurants[i]['name'], 'distance': info['distance'], 'duration': info['duration']}
+        restaurants[i] = {'name': restaurants[i]['name'], 'address': restaurants[i]['address'], 'distance': info['distance'], 'duration': info['duration']}
 
     # Return top 15 restaurants with distances 
 

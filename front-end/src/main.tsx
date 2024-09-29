@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { ReactDOM } from 'react';
 import { Provider } from 'react-redux';
 import App from './App.tsx'
+import './App.css'
 import userReducer from './state/index.ts'
 import {
   persistStore,

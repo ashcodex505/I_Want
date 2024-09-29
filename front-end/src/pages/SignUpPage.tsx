@@ -10,6 +10,8 @@ import elipse from "../assets/Ellipse 2.png"
 import GoogleIcon from "@mui/icons-material/Google"
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "../../firebaseConfig";
+import myImage from '../assets/LogoFINAL.png';
+import GoogleLogoPNG from '../assets/google.png';
 const SignUpPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -23,7 +25,7 @@ const SignUpPage = () => {
         const result = await signInWithPopup(auth, googleProvider);
         const user = result.user;
         console.log('User signed in with Google:', user.displayName);
-        navigate('/home');
+        navigate('/want');
       }
       catch(err) {
         console.error('Error during google sign in', err)
@@ -35,7 +37,7 @@ const SignUpPage = () => {
       // Signed in 
       const user = userCredential.user;
       console.log('User Signed In', user)
-      navigate('/home')
+      navigate('/want')
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -51,7 +53,7 @@ const SignUpPage = () => {
           // Signed up 
           const user = userCredential.user;
           console.log('User Registered:', user)
-          navigate('/home')
+          navigate('/want')
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -62,12 +64,20 @@ const SignUpPage = () => {
 
     }
     return (
+      
+      <Box sx = {{
+        background: 'linear-gradient(135deg, #819dda, #d9d9d9)'
+      }}>
         <Grid container direction={'column'} > 
+        
         <Grid container alignItems="center" justifyContent='center' >
             <Grid >
-            <Typography variant="h1" fontWeight="bold" sx={{fontSize: '18px', marginRight: '10px', marginTop: 5, color: 'white'}}>
+            
+            {/* <Typography variant="h1" fontWeight="bold" sx={{fontSize: '24px', marginRight: '10px', marginTop: 8, color: 'white'}}>
             I Want
-            </Typography>
+            
+            </Typography> */}
+            
             </Grid>
         </Grid>
         <Grid sx={{marginLeft:30 }} container  direction={'column'}> 
@@ -77,6 +87,11 @@ const SignUpPage = () => {
             <Typography variant="h1" fontWeight="bold" sx={{fontSize: '88px', marginRight: '10px', marginTop: 0, color: 'white'}}>
             you want
                 </Typography>
+                <div>
+              <Box sx = {{position: 'absolute', top: 40, left: 860}}>
+                <img src ={myImage} style = {{width: '300px', height: 'auto'}}></img>
+              </Box>
+            </div>
             <FormControl sx={{minWidth: 600, marginTop: 10}} size="medium">
                
                 <TextField
@@ -89,10 +104,10 @@ const SignUpPage = () => {
                         borderColor: '#fff', // Default border color
                       },
                       '&:hover fieldset': {
-                        borderColor: '#ff8c00', // Border color when hovering
+                        borderColor: '#fff', // Border color when hovering
                       },
                       '&.Mui-focused fieldset': {
-                        borderColor: '#ff8c00', // Border color when focused
+                        borderColor: '#fff', // Border color when focused
                       },
                     },}}
                     id= 'text'
@@ -116,10 +131,10 @@ const SignUpPage = () => {
                        borderColor: '#fff', // Default border color
                      },
                      '&:hover fieldset': {
-                       borderColor: '#ff8c00', // Border color when hovering
+                       borderColor: '#fff', // Border color when hovering
                      },
                      '&.Mui-focused fieldset': {
-                       borderColor: '#ff8c00', // Border color when focused
+                       borderColor: '#fff', // Border color when focused
                      },
                    },}}
                    id= 'text'
@@ -135,7 +150,8 @@ const SignUpPage = () => {
         <Grid container direction={'row'}>
         <Box
           sx={{
-            marginTop: '20px',
+            //this is where i adjust log in, sign up, and the other one
+            marginTop: '60px',
             display: 'flex',
             justifyContent: 'center',
             gap: '20px',
@@ -144,27 +160,25 @@ const SignUpPage = () => {
         >
           <Button
            onClick={handleSignIn}
-            variant="contained"
+            variant="outlined"
             sx={{
-              backgroundColor: '#888888',width: '200px',
+              width: '200px', border: '2px solid white',
               height: '40px',
-              '&:hover': { backgroundColor: '#888888' },
-              color: 'white',
+              '&:hover': { backgroundColor: '#7A94CB' },
+              color: '#516285',
             }}
           >
             <Typography variant="h1" 
-  sx={{ fontWeight: 'bold', fontSize: '18px', color: 'white' }}>
+  sx={{ fontWeight: 'bold', fontSize: '18px', color: 'white'}}>
           Log In 
           </Typography>
           </Button>
           <Button
-         
          onClick ={handleSignUp}
-            variant="contained"
+            variant="outlined"
             sx={{
-              backgroundColor: '#888888',
-              '&:hover': { backgroundColor: '#888888' },
-              color: 'white',width: '200px',
+              '&:hover': { backgroundColor: '#7A94CB' },
+              border: '2px solid white',width: '200px',
               height: '40px',
             }}
           >
@@ -175,20 +189,23 @@ const SignUpPage = () => {
           </Button>
           <Button
           onClick={handleGoogleSignIn}
-         startIcon={<GoogleIcon/>}
+         //startIcon={<GoogleIcon/>}
+         
           variant="contained"
          
           sx={{
             fontSize: '10px',
             fontStyle: 'Inter',
-            backgroundColor: '#888888',
+            backgroundColor: '#ffffff',
             color: 'black', width: '300px',
             height: '40px', border: '1px solid gray',
             '&:hover': { backgroundColor: '#dddddd' }, 
           }}
         >
+                <img src ={GoogleLogoPNG} style = {{width: '30px', height: 'auto'}}></img>
+          
           <Typography variant="h1" 
-  sx={{ fontWeight: 'bold', fontSize: '18px', color: 'white' }} >
+  sx={{ fontWeight: 'bold', fontSize: '18px', color: '#000000' }} >
           Sign In with Google
           </Typography>
         </Button>
@@ -205,7 +222,7 @@ const SignUpPage = () => {
            
             
         </Grid>
-   
+        </Box>
 
     )
 }

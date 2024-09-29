@@ -1,38 +1,100 @@
-import {Button, ToggleButton, ToggleButtonGroup, Grid2, Typography} from '@mui/material';
+import {Button, ToggleButton, ToggleButtonGroup, Grid2, Typography, Box} from '@mui/material';
+import { signOut } from 'firebase/auth';
 import {useState} from 'react';
+import { useNavigate } from 'react-router-dom';
+import {auth} from '../../firebaseConfig'
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { setMacro } from '../state';
+import myImage from '../assets/IWant_transparentnewnew.png';
 
-
-   
 
 const WhatIWant = () => 
     {
+        const dispatch = useDispatch();
+        //Dont worry about red line under state, error unimportant
+        const macro = useSelector((state)=>state.macro)
         const [selectedButton, setSelectedButton] = useState<number | null>(null); // Track the selected button
-
+        const options = ['Protein', 'Carbs', 'Low-Fat', 'Calories/$', '?'];
         const handleButtonClick = (
             event: React.MouseEvent<HTMLElement>,   
             newSelection: number | null
         ) => {
             setSelectedButton(newSelection);
         }
-        return(
-            <>
-            <Typography variant = "h4" sx={{textAlign: 'center', marginTop: '100px'}}>I Want ___________________</Typography>
 
+        const navigate = useNavigate();
+        const handleNext = () => {
+            console.log(selectedButton)
+            dispatch(
+                setMacro({
+                    macro: selectedButton
+                })
+            )
+            navigate('/map')
+            
+
+        }
+    const handleSignOut = async () => {
+        try {
+          await signOut(auth);
+          console.log('User signed out');
+          navigate('/')
+        } catch (error) {
+          console.error('Error signing out:', error);
+        }
+      };
+        return(
+            <Box sx = {{
+                background: 'linear-gradient(130deg, #819dda, #d9d9d9)',
+                height: '100vh'
+              }}>
+            <Grid2 container justifyContent={"flex-end"}>
+            <Button
+           onClick ={handleSignOut}
+            variant="outlined"
+            sx={{
+              border: '1px solid white', width: '200px', marginTop: '30px', 
+              marginRight: '100px',
+              '&:hover': { backgroundColor: '#88a2da' },
+              color: 'white',
+            }}
+          >
+            <Typography variant="h1" 
+  sx={{ fontSize: '18px', color: 'white', fontWeight: 'small' }}>
+          Sign Out
+          </Typography>
+          </Button>
+          </Grid2>
+            <div>
+              <Box sx = {{position: 'absolute', top: 30, left: 100}}>
+                <img src ={myImage}></img>
+              </Box>
+            </div>
+            <Typography variant = "h4" sx={{textAlign: 'center', fontWeight: 'bold', marginTop: '100px', color: 'white', fontSize: '46px', fontStyle: 'Inter'}}>I Want ___________________</Typography>
+
+            
             <div style={{ padding: '20px' }}>
             <Grid2 container spacing = {10} justifyContent = "center">
                 <ToggleButtonGroup
+               
                     value={selectedButton}
                     exclusive
                     onChange={handleButtonClick}
                     aria-label="button selection"
                 >
                     <Grid2 container spacing = {2}>
-                    {['Protein', 'Carbs', 'Low-Fat', 'Calories/$', '?'].map((buttonNumber) => (
+                    {options.map((buttonNumber) => (
                     <ToggleButton
                         key={buttonNumber}
                         value={buttonNumber}
                         aria-label={`${buttonNumber}`}
-                        sx={{ margin: '0 10px', width: '150px', padding: '10px 0' }}
+                        sx={{ margin: '0 10px', width: '150px', padding: '10px 0', color: 'white', borderColor: 'white ',  
+                            '&:hover': { backgroundColor: '#CDD8F1' }, 
+                            '&.Mui-selected': {
+                                backgroundColor: '#9CB2E0'
+                              }
+                        }}
                     >
                         {buttonNumber}
                     </ToggleButton>
@@ -45,15 +107,18 @@ const WhatIWant = () =>
             {/* Button 6 - Proceed to Next Page */}
             <Grid2 container justifyContent={'center'}>
                 <Button
-                    variant="contained"
+                onClick={handleNext}
+                    variant="outlined"
                     disabled={selectedButton === null}
-                    style={{ marginTop: '20px', textAlign: 'center' }}
-                >
+                    sx={{ marginTop: '110px', textAlign: 'center', 
+                        border: '2px solid white', color: 'white', '&:hover': { backgroundColor: '#CDD8F1' }
+                     }}
+                    >
                     Go to Next Page
                 </Button>
             </Grid2>
             </div>
-            </>
+            </Box>
         )
         
     }
