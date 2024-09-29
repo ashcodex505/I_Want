@@ -23,6 +23,12 @@ dist-ssr
 *.sln
 *.sw?
 
+# python stuff
+.venv/
+__pycache__/
+
+scraper/
+
 
 /back-end/database/data/
 back-end/database/data/

@@ -1,34 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
 
+import { BrowserRouter, Navigate, Routes, Route  } from "react-router-dom"
+import { UseSelector } from "react-redux"
+import SignUpPage from "./pages/SignUpPage"
+import WhatIWant from "./pages/WhatIWant"
+import HomePage from "./pages/Map"
+import { CssBaseline } from "@mui/material"
+import ProtectedRoute from "./ProtectedRoute"
+import MapPage from "./pages/Map"
+import Restaurant from "./pages/Restaurant"
+import MealsPage from "./pages/MealsPage"
 function App() {
-  const [count, setCount] = useState(0)
+  
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="app"  style={{
+      height: '100vh',
+      width: '100vw',
+      margin: 0,
+      padding: 0,
+      backgroundColor: '#819DDA', // Set the background color here
+    }} >
+      <BrowserRouter>
+      <CssBaseline/>
+        <Routes>
+          <Route path = "/" element = {<SignUpPage/>} />
+          <Route path = "/want" element = {<WhatIWant/>} />
+      
+            <Route path = "/map" element = {<MapPage/>}/>
+            <Route path = "/restaurant" element = {<Restaurant/>} />
+            <Route path ="/meals" element= {<MealsPage/>}/>
+        </Routes>
+      </BrowserRouter>
+    </div>
+
   )
 }
 
