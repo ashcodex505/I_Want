@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import googlemaps
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/')
 def hello_world():
@@ -17,7 +19,7 @@ def get_restaurants():
     latitude = data.get('latitude')
     longitude = data.get('longitude')
     radius = data.get('radius') * 1609.34 # miles to meters
-    
+    print(data)
     # Survey Google Places API for restaurants in radius
     response = googlemaps.get_nearby_restaurants(latitude=latitude, longitude=longitude, radius=radius)
 
