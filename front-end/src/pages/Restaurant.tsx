@@ -1,7 +1,6 @@
-import { Avatar, Box, Button, ButtonBase, Paper, Typography } from "@mui/material";
+import { Avatar, Box, ButtonBase, Paper, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useSelector } from "react-redux";
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Location from '../assets/Location.png'
 import { setMeals, setRestaurant } from "../state";
 import { useDispatch } from "react-redux";
@@ -11,10 +10,10 @@ const Restaurant = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const {restaurants, macro}  = useSelector((state) => state);
+    const {restaurants, macro}  = useSelector((state: any) => state);
 
    
-    const handleClick = async(state) => {
+    const handleClick = async(state: any) => {
        
             try {
               
@@ -48,7 +47,7 @@ const Restaurant = () => {
                 navigate('/meals')
               }
               else{
-                console.error('Error:', savedRestaurants);
+                console.error('Error:', savedMeals);
               }
               
             } catch (error) {
@@ -73,7 +72,7 @@ const Restaurant = () => {
                         background: 'linear-gradient(200deg, #819dda, #d9d9d9)'
                     }}
                 >
-            {restaurants.map((state, index) => (
+            {restaurants.map((state: any, index: any) => (
 
                 <>
                

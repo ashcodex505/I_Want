@@ -1,5 +1,4 @@
-import { signOut } from "firebase/auth"
-import {auth} from '../../firebaseConfig'
+
 import { Button, Typography, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -7,7 +6,7 @@ import MapWithGeolocation from "../components/MapComponent";
 import myImage from '../assets/IWant_transparentnewnew.png';
 import SignOut from "../components/SignOutButton";
 const MapPage = ( ) => {
-    const macro = useSelector((state)=> state.macro)
+    const macro = useSelector((state: any)=> state.macro)
     const navigate = useNavigate();
    
     return (

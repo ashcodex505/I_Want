@@ -1,12 +1,11 @@
-import { Avatar, Box, Button, ButtonBase, Paper, Typography } from "@mui/material";
+import { Avatar, Box,  ButtonBase, Paper, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useSelector } from "react-redux";
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Location from '../assets/Location.png'
 import SignOut from "../components/SignOutButton";
 const Meals = () => {
-    const {meals, macro }  = useSelector((state) => state);
-    const restaurant = useSelector((state)=> state.restaurant)
+    const {meals, macro }  = useSelector((state: any) => state);
+    const restaurant = useSelector((state:any)=> state.restaurant)
     
     
     console.log(restaurant)
@@ -28,7 +27,7 @@ const Meals = () => {
                         background: 'linear-gradient(200deg, #819dda, #d9d9d9)'
                     }}
                 >
-            {meals.map((state, index) => (
+            {meals.map((state: any, index: any) => (
 
                 <>
                

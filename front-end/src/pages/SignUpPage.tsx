@@ -3,18 +3,13 @@ import Grid from '@mui/material/Grid2';
 import { useState } from "react";
 import {  useNavigate } from "react-router-dom";
 import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import { useDispatch } from "react-redux";
-import { setLogin } from "../state";
-import elipse from "../assets/Ellipse 2.png"
-import GoogleIcon from "@mui/icons-material/Google"
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "../../firebaseConfig";
 import myImage from '../assets/LogoFINAL.png';
 import GoogleLogoPNG from '../assets/google.png';
 const SignUpPage = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+    
     const [formData, setFormData] = useState( {
         email: '',
         password: ''
@@ -40,7 +35,7 @@ const SignUpPage = () => {
       navigate('/want')
     })
     .catch((error) => {
-      const errorCode = error.code;
+
       const errorMessage = error.message;
       console.log(errorMessage)
   });
@@ -56,7 +51,6 @@ const SignUpPage = () => {
           navigate('/want')
         })
         .catch((error) => {
-          const errorCode = error.code;
           const errorMessage = error.message;
           console.log(errorMessage)
         });

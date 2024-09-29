@@ -1,10 +1,7 @@
 import {Button, ToggleButton, ToggleButtonGroup, Grid2, Typography, Box} from '@mui/material';
-import { signOut } from 'firebase/auth';
 import {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
-import {auth} from '../../firebaseConfig'
 import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
 import { setMacro } from '../state';
 import myImage from '../assets/IWant_transparentnewnew.png';
 import SignOut from '../components/SignOutButton';
@@ -14,11 +11,11 @@ const WhatIWant = () =>
     {
         const dispatch = useDispatch();
         //Dont worry about red line under state, error unimportant
-        const macro = useSelector((state)=>state.macro)
+       
         const [selectedButton, setSelectedButton] = useState<number | null>(null); // Track the selected button
         const options = ['Protein', 'Carbs', 'Low-Fat', 'Calories/$', '?'];
         const handleButtonClick = (
-            event: React.MouseEvent<HTMLElement>,   
+            _event: React.MouseEvent<HTMLElement>,   
             newSelection: number | null
         ) => {
             setSelectedButton(newSelection);
@@ -36,15 +33,7 @@ const WhatIWant = () =>
             
 
         }
-    const handleSignOut = async () => {
-        try {
-          await signOut(auth);
-          console.log('User signed out');
-          navigate('/')
-        } catch (error) {
-          console.error('Error signing out:', error);
-        }
-      };
+    
         return(
             <Box sx = {{
                 background: 'linear-gradient(130deg, #819dda, #d9d9d9)',
