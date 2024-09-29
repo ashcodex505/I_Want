@@ -3,63 +3,19 @@ import Grid from "@mui/material/Grid2";
 import { useSelector } from "react-redux";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Location from '../assets/Location.png'
-import { setMeals, setRestaurant } from "../state";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-const Restaurant = () => {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-
-    const {restaurants, macro}  = useSelector((state) => state);
-
-   
-    const handleClick = async(state) => {
-       
-            try {
-              
-              const savedMealsResponse = await fetch(
-                "http://127.0.0.1:5000/dishes",
-                {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json", // Ensure the correct header is set
-                  },
-                  body: JSON.stringify({
-                    'macro': macro,
-                    "restaurant": state.name
-      
-                  }),
-                }
-              );
-              const savedMeals = await savedMealsResponse.json();
-              if(savedMealsResponse.ok){
-                console.log(savedMeals);
-                console.log(state.name)
-                dispatch(
-                  setMeals(savedMeals)
-                  
-                  
-                )
-                dispatch(setRestaurant(state.name))
-                console.log('Success')
-               
-               
-                navigate('/meals')
-              }
-              else{
-                console.error('Error:', savedRestaurants);
-              }
-              
-            } catch (error) {
-              console.error('Error:', error);
-            
-          }
-        
-    }
+const Meals = () => {
+    const {meals, macro }  = useSelector((state) => state);
+    const restaurant = useSelector((state)=> state.restaurant)
+    
+    
+    console.log(restaurant)
     return ( 
         <>
              
-            <Grid container alignItems = 'center' spacing={2} direction={'column'} mt={10}>
+            <Grid container alignItems = 'center' spacing={2} direction={'column'} mt={0}>
+            <Typography variant="h1" fontWeight="bold" sx={{fontSize: '88px', marginTop: 10, color: 'white'}}>
+                {restaurant} 
+                </Typography>
             <Box 
                     sx={{ 
                         width: '535px', 
@@ -71,14 +27,13 @@ const Restaurant = () => {
                         background: 'linear-gradient(200deg, #819dda, #d9d9d9)'
                     }}
                 >
-            {restaurants.map((state, index) => (
+            {meals.map((state, index) => (
 
                 <>
                
                 
                 <Grid sx={{width: '500px', height: '100px'}}>
                 <ButtonBase
-                onClick={() => handleClick(state)}
                  key={index}
         //   onClick={} // Adding click handler
                 sx={{ width: '500px', height: '100px'}}
@@ -110,12 +65,13 @@ const Restaurant = () => {
               <Grid container direction={'column'} alignItems='flex-start' >
                 <Grid>
                 <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                  {state.name}
+                  {state.dish}
                 </Typography>
                 </Grid>
                 <Grid>
-                <Typography variant="body2">
-                  {state.distance} <span style={{ marginLeft: '15px' }}>{state.duration}</span>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                    
+                  {`${macro}: ${state[macro]}`} 
                 </Typography>
                 </Grid>
               </Grid>
@@ -165,4 +121,4 @@ const Restaurant = () => {
         </>
     )
 }
-export default Restaurant;
+export default Meals;
