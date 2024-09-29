@@ -64,6 +64,10 @@ const SignUpPage = () => {
 
     }
     return (
+      
+      <Box sx = {{
+        background: 'linear-gradient(135deg, #819dda, #d9d9d9)'
+      }}>
         <Grid container direction={'column'} > 
         
         <Grid container alignItems="center" justifyContent='center' >
@@ -156,11 +160,11 @@ const SignUpPage = () => {
         >
           <Button
            onClick={handleSignIn}
-            variant="contained"
+            variant="outlined"
             sx={{
-              backgroundColor: '#516285',width: '200px',
+              width: '200px', border: '2px solid white',
               height: '40px',
-              '&:hover': { backgroundColor: '#dddddd' },
+              '&:hover': { backgroundColor: '#7A94CB' },
               color: '#516285',
             }}
           >
@@ -172,11 +176,10 @@ const SignUpPage = () => {
           <Button
          
          onClick ={handleSignUp}
-            variant="contained"
+            variant="outlined"
             sx={{
-              backgroundColor: '#516285',
-              '&:hover': { backgroundColor: '#dddddd' },
-              color: 'white',width: '200px',
+              '&:hover': { backgroundColor: '#7A94CB' },
+              border: '2px solid white',width: '200px',
               height: '40px',
             }}
           >
@@ -220,7 +223,7 @@ const SignUpPage = () => {
            
             
         </Grid>
-   
+        </Box>
 
     )
 }
