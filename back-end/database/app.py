@@ -112,33 +112,88 @@ def add_nutrition_information():
 # POST method: get restaurants
 # Takes in user specified macro, latitude, longitude
 # Surveys Google Places API for restaurants in 1 mile radius
+@app.route('/restaurants', methods=["POST"])
+def get_restaurants():
+    data = request.get_json()
+    macro = data.get('macro')
+    latitude = data.get('latitude')
+    longitude = data.get('longitude')
+    radius = data.get('radius') * 1609.34 # miles to meters
+    print(data)
+    # Survey Google Places API for restaurants in radius
+    response = googlemaps.get_nearby_restaurants(latitude=latitude, longitude=longitude, radius=radius)
+
+    restaurants = [
+                    {
+                        'name': place['name'],
+                        'location': place['geometry']['location'],
+                        'address': place['vicinity']
+                    }
+                    for place in response['results']
+                    if not place.get('permanently_closed', False)
+                ]
+
+    # Get top 15 restaurants according to macro
+    # SQL stuff
+    # Rank restaurants by average of top 5 meals offered
+    # Return the top 15 restaurants
+
+    # ranking_query = f"""
+    # SELECT
+    #     r.restaurant_name,
+    #     AVG(n.{macro}) AS average_macro
+    # FROM
+    #     restaurant_information r
+    # JOIN
+    #     nutrition_facts n ON r.restaurant_name = n.restaurant_name
+    # GROUP BY
+    #     r.restaurant_name
+    # ORDER BY
+    #     average_macro DESC
+    # LIMIT 15;
+    # """
+
+    # restaurants = db.session.execute(ranking_query).fetchall()
+
+    # restaurant_list = [{'restaurant_name': row[0], 'average_macro': row[1]} for row in top_restaurants]
+    # return jsonify(restaurant_list), 200
+
+
+    # Survey Google Distance Matrix API to get distances from user location
+    # For each restaurant returned by ^^, call googlemaps.get_travel_distance(user coords, dest coords, mode of transport)
+    # store restaurant names + distances + durations in JSON
+
+    for i in range(len(restaurants)):
+        info = googlemaps.get_travel_distance(user_lat=latitude, user_lng=longitude, dest_lat=restaurants[i]['location']['lat'], dest_lng=restaurants[i]['location']['lng'])
+        restaurants[i] = {'name': restaurants[i]['name'], 'address': restaurants[i]['address'], 'distance': info['distance'], 'duration': info['duration']}
+
+    # Return top 15 restaurants with distances
+
+    return restaurants
+
 # @app.route('/restaurants', methods=["POST"])
 # def get_restaurants():
 #     data = request.get_json()
 #     macro = data.get('macro')
 #     latitude = data.get('latitude')
 #     longitude = data.get('longitude')
-#     radius = data.get('radius') * 1609.34 # miles to meters
-#     print(data)
-#     # Survey Google Places API for restaurants in radius
+#     radius = data.get('radius') * 1609.34  # miles to meters
+
+#     # Survey Google Places API for restaurants in the specified radius
 #     response = googlemaps.get_nearby_restaurants(latitude=latitude, longitude=longitude, radius=radius)
-#
+
 #     restaurants = [
-#                     {
-#                         'name': place['name'],
-#                         'location': place['geometry']['location'],
-#                         'address': place['vicinity']
-#                     }
-#                     for place in response['results']
-#                     if not place.get('permanently_closed', False)
-#                 ]
-#
-#     # Get top 15 restaurants according to macro
-#     # SQL stuff
-#     # Rank restaurants by average of top 5 meals offered
-#     # Return the top 15 restaurants
-#
-#     ranking_query = f"""
+#         {
+#             'name': place['name'],
+#             'location': place['geometry']['location'],
+#             'address': place['vicinity']
+#         }
+#         for place in response['results']
+#         if not place.get('permanently_closed', False)
+#     ]
+
+#     # Construct the ranking query dynamically using safe parameterization
+#     ranking_query = text(f"""
 #     SELECT
 #         r.restaurant_name,
 #         AVG(n.{macro}) AS average_macro
@@ -151,75 +206,20 @@ def add_nutrition_information():
 #     ORDER BY
 #         average_macro DESC
 #     LIMIT 15;
-#     """
-#
-#     restaurants = db.session.execute(ranking_query).fetchall()
-#
-#     # restaurant_list = [{'restaurant_name': row[0], 'average_macro': row[1]} for row in top_restaurants]
-#     # return jsonify(restaurant_list), 200
-#
-#
+#     """)
+
+#     # Execute the query and fetch results
+#     top_restaurants = db.session.execute(ranking_query).fetchall()
+
+#     restaurant_list = [{'restaurant_name': row[0], 'average_macro': row[1]} for row in top_restaurants]
+
 #     # Survey Google Distance Matrix API to get distances from user location
-#     # For each restaurant returned by ^^, call googlemaps.get_travel_distance(user coords, dest coords, mode of transport)
-#     # store restaurant names + distances + durations in JSON
-#
-#     for i in range(len(restaurants)):
+#     for i in range(len(restaurant_list)):
 #         info = googlemaps.get_travel_distance(user_lat=latitude, user_lng=longitude, dest_lat=restaurants[i]['location']['lat'], dest_lng=restaurants[i]['location']['lng'])
-#         restaurants[i] = {'name': restaurants[i]['name'], 'address': restaurants[i]['address'], 'distance': info['distance'], 'duration': info['duration']}
-#
+#         restaurant_list[i].update({'distance': info['distance'], 'duration': info['duration']})
+
 #     # Return top 15 restaurants with distances
-#
-#     return restaurants
-
-@app.route('/restaurants', methods=["POST"])
-def get_restaurants():
-    data = request.get_json()
-    macro = data.get('macro')
-    latitude = data.get('latitude')
-    longitude = data.get('longitude')
-    radius = data.get('radius') * 1609.34  # miles to meters
-
-    # Survey Google Places API for restaurants in the specified radius
-    response = googlemaps.get_nearby_restaurants(latitude=latitude, longitude=longitude, radius=radius)
-
-    restaurants = [
-        {
-            'name': place['name'],
-            'location': place['geometry']['location'],
-            'address': place['vicinity']
-        }
-        for place in response['results']
-        if not place.get('permanently_closed', False)
-    ]
-
-    # Construct the ranking query dynamically using safe parameterization
-    ranking_query = text(f"""
-    SELECT
-        r.restaurant_name,
-        AVG(n.{macro}) AS average_macro
-    FROM
-        restaurant_information r
-    JOIN
-        nutrition_facts n ON r.restaurant_name = n.restaurant_name
-    GROUP BY
-        r.restaurant_name
-    ORDER BY
-        average_macro DESC
-    LIMIT 15;
-    """)
-
-    # Execute the query and fetch results
-    top_restaurants = db.session.execute(ranking_query).fetchall()
-
-    restaurant_list = [{'restaurant_name': row[0], 'average_macro': row[1]} for row in top_restaurants]
-
-    # Survey Google Distance Matrix API to get distances from user location
-    for i in range(len(restaurant_list)):
-        info = googlemaps.get_travel_distance(user_lat=latitude, user_lng=longitude, dest_lat=restaurants[i]['location']['lat'], dest_lng=restaurants[i]['location']['lng'])
-        restaurant_list[i].update({'distance': info['distance'], 'duration': info['duration']})
-
-    # Return top 15 restaurants with distances
-    return jsonify(restaurant_list), 200
+#     return jsonify(restaurant_list), 200
 
 @app.route('/dishes', methods=['POST'])
 def get_dishes():
@@ -230,43 +230,51 @@ def get_dishes():
     # Get top 15 dishes ranked by macro in given restaurant
 
     # Get top 15 dishes ranked by macro in given restaurant
-    query = f"""
-        SELECT
-            item,
-            {macro}
-        FROM
-            nutrition_facts,
-        WHERE
-            restaurant_name = :restaurant
-        ORDER BY
-            {macro} DESC
-        LIMIT 15;
-        """
-    result = db.session.execute(query, {"restaurant": restaurant}).fetchall()
+    # query = f"""
+    #     SELECT
+    #         item,
+    #         {macro}
+    #     FROM
+    #         nutrition_facts,
+    #     WHERE
+    #         restaurant_name = :restaurant
+    #     ORDER BY
+    #         {macro} DESC
+    #     LIMIT 15;
+    #     """
+    # result = db.session.execute(query, {"restaurant": restaurant}).fetchall()
 
-    dishes = [
-        {
-            'dish': row[0],
-            macro: row[1]
-        }
-        for row in result
-    ]
-
-    return jsonify(dishes), 200
-
-    # # json object with dish name and amount of macro
     # dishes = [
     #     {
-    #         'dish': 'balls1',
-    #         macro: '500'
-    #     },
-    #     {
-    #         'dish': 'balls2',
-    #         macro: '900'
+    #         'dish': row[0],
+    #         macro: row[1]
     #     }
+    #     for row in result
     # ]
 
-    # return dishes
+    # return jsonify(dishes), 200
+
+    # json object with dish name and amount of macro
+    dishes = [
+        {
+            'dish': 'Beef Lasagna',
+            macro: '872'
+        },
+        {
+            'dish': 'Margherita Pizza',
+            macro: '638'
+        },
+        {
+            'dish': 'Breadsticks',
+            macro: '578'
+        },
+        {
+            'dish': 'Chicken Alfredo',
+            macro: '568'
+        },
+    ]
+
+    return dishes
 
 if __name__ == '__main__':
     app.run(port=4000, debug=True)

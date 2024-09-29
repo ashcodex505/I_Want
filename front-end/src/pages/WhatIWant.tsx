@@ -13,7 +13,7 @@ const WhatIWant = () =>
         //Dont worry about red line under state, error unimportant
        
         const [selectedButton, setSelectedButton] = useState<number | null>(null); // Track the selected button
-        const options = ['Protein', 'Carbs', 'Low-Fat', 'Calories/$', '?'];
+        const options = ['Protein', 'Carbs', 'Fiber', 'Calories/$'];
         const handleButtonClick = (
             _event: React.MouseEvent<HTMLElement>,   
             newSelection: number | null
