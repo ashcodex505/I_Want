@@ -21,9 +21,7 @@ const MapPage = ( ) => {
         <>
         <MapWithGeolocation />
         
-        <Typography>
-          {macro}
-        </Typography>
+        
         
        
         </>

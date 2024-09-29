@@ -20,6 +20,7 @@ const mapOptions = {
 };
 
 const MapWithGeolocation: React.FC = () => {
+    
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const restaurants = useSelector((state)=> state.restaurants)
@@ -75,8 +76,10 @@ const MapWithGeolocation: React.FC = () => {
       height: '80vh',
       width: '100%',
     };
+    const [loading, setLoading] = useState(0);
     const handleRequest = async () => {
       try {
+        setLoading(1);
         const savedRestaurantResponse = await fetch(
           "http://127.0.0.1:5000/restaurants",
           {
@@ -115,6 +118,7 @@ const MapWithGeolocation: React.FC = () => {
     const defaultCenter = currentPosition || { lat: 40.7128, lng: -74.006 };
   
     return (
+      <>
       <LoadScript googleMapsApiKey={googleMapsApiKey} libraries={['places']}>
         <div>
           <StandaloneSearchBox
@@ -162,11 +166,14 @@ const MapWithGeolocation: React.FC = () => {
           >
             <Typography variant="h1" 
   sx={{ fontWeight: 'bold', fontSize: '18px', color: 'white' }}>
-          Search
+          {loading === 1 ? 'Loading...' : 'Search'}
           </Typography>
           </Button>
         </div>
       </LoadScript>
+      
+      </>
+      
     );
   };
   
