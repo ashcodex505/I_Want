@@ -66,7 +66,7 @@ const SignUpPage = () => {
     return (
       
       <Box sx = {{
-        background: 'linear-gradient(135deg, #819dda, #d9d9d9)'
+        background: 'linear-gradient(135deg, #819dda, #d9d9d9)', height: '100vh'
       }}>
         <Grid container direction={'column'} > 
         

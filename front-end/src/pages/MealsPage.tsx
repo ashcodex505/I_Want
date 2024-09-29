@@ -3,6 +3,7 @@ import Grid from "@mui/material/Grid2";
 import { useSelector } from "react-redux";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Location from '../assets/Location.png'
+import SignOut from "../components/SignOutButton";
 const Meals = () => {
     const {meals, macro }  = useSelector((state) => state);
     const restaurant = useSelector((state)=> state.restaurant)
@@ -11,7 +12,7 @@ const Meals = () => {
     console.log(restaurant)
     return ( 
         <>
-             
+             <SignOut/>
             <Grid container alignItems = 'center' spacing={2} direction={'column'} mt={0}>
             <Typography variant="h1" fontWeight="bold" sx={{fontSize: '88px', marginTop: 10, color: 'white'}}>
                 {restaurant} 
