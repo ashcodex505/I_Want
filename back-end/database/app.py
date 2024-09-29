@@ -122,6 +122,27 @@ def get_restaurants():
     # Rank restaurants by average of top 5 meals offered
     # Return the top 15 restaurants
 
+    ranking_query = f"""
+    SELECT
+        r.restaurant_name,
+        AVG(n.{macro}) AS average_macro
+    FROM
+        restaurant_information r
+    JOIN
+        nutrition_facts n ON r.restaurant_name = n.restaurant_name
+    GROUP BY
+        r.restaurant_name
+    ORDER BY
+        average_macro DESC
+    LIMIT 15;
+    """
+
+    restaurants = db.session.execute(ranking_query).fetchall()
+
+    # restaurant_list = [{'restaurant_name': row[0], 'average_macro': row[1]} for row in top_restaurants]
+    # return jsonify(restaurant_list), 200
+
+
     # Survey Google Distance Matrix API to get distances from user location
     # For each restaurant returned by ^^, call googlemaps.get_travel_distance(user coords, dest coords, mode of transport)
     # store restaurant names + distances + durations in JSON
@@ -142,19 +163,44 @@ def get_dishes():
 
     # Get top 15 dishes ranked by macro in given restaurant
 
-    # json object with dish name and amount of macro
+    # Get top 15 dishes ranked by macro in given restaurant
+    query = f"""
+        SELECT
+            item,
+            {macro}
+        FROM
+            nutrition_facts
+        WHERE
+            restaurant_name = :restaurant
+        ORDER BY
+            {macro} DESC
+        LIMIT 15;
+        """
+    result = db.session.execute(query, {"restaurant": restaurant}).fetchall()
+
     dishes = [
         {
-            'dish': 'balls1',
-            macro: '500'
-        },
-        {
-            'dish': 'balls2',
-            macro: '900'
+            'dish': row[0],
+            macro: row[1]
         }
+        for row in result
     ]
 
-    return dishes
+    return jsonify(dishes), 200
+
+    # # json object with dish name and amount of macro
+    # dishes = [
+    #     {
+    #         'dish': 'balls1',
+    #         macro: '500'
+    #     },
+    #     {
+    #         'dish': 'balls2',
+    #         macro: '900'
+    #     }
+    # ]
+
+    # return dishes
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
