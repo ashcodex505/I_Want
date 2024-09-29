@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 from flask_cors import CORS
 import googlemaps
+from sqlalchemy import text
 
 app = Flask(__name__)
 CORS(app)
@@ -74,55 +75,125 @@ def add_restaurant_information():
 
 @app.route('/load_nutrition_information', methods=['POST'])
 def add_nutrition_information():
-    data = request.get_json()
+    try:
+        # Get the JSON data from the request body
+        nutrition_data = request.get_json()
 
-    # Insert nutrition facts with foreign key dependency
-    nutrition_facts = NutritionFacts(
-        item=data['item'],
-        restaurant_name=data['restaurant_name'],
-        calories=data['calories'],
-        carbohydrates_g=data['carbohydrates_g'],
-        dietary_fiber_g=data['dietary_fiber_g'],
-        protein_g=data['protein_g']
-    )
+        # Iterate over the received data
+        for item in nutrition_data:
+            # Check if an entry with the same item name already exists
+            existing_entry = NutritionFacts.query.filter_by(item=item['item'], restaurant_name=item['restaurant_name']).first()
 
-    db.session.add(nutrition_facts)
-    db.session.commit()
+            # If no such entry exists, add a new one
+            if not existing_entry:
+                new_entry = NutritionFacts(
+                    item=item['item'],
+                    restaurant_name=item['restaurant_name'],
+                    calories=item['calories'],
+                    carbohydrates_g=item['carbohydrates_g'],
+                    dietary_fiber_g=item['dietary_fiber_g'],
+                    protein_g=item['protein_g']
+                )
+                db.session.add(new_entry)
 
-    return jsonify({"message": "Nutrition Facts added successfully"}), 201
+        # Commit the session to save all the new entries in the database
+        db.session.commit()
+
+        return jsonify({"message": "Data successfully inserted"}), 200
+
+    except Exception as e:
+        db.session.rollback()  # Rollback in case of any error
+        return jsonify({"error": str(e)}), 400
+
+
 
 # @app.route('get_protein')
 
 # POST method: get restaurants
 # Takes in user specified macro, latitude, longitude
 # Surveys Google Places API for restaurants in 1 mile radius
+# @app.route('/restaurants', methods=["POST"])
+# def get_restaurants():
+#     data = request.get_json()
+#     macro = data.get('macro')
+#     latitude = data.get('latitude')
+#     longitude = data.get('longitude')
+#     radius = data.get('radius') * 1609.34 # miles to meters
+#     print(data)
+#     # Survey Google Places API for restaurants in radius
+#     response = googlemaps.get_nearby_restaurants(latitude=latitude, longitude=longitude, radius=radius)
+#
+#     restaurants = [
+#                     {
+#                         'name': place['name'],
+#                         'location': place['geometry']['location'],
+#                         'address': place['vicinity']
+#                     }
+#                     for place in response['results']
+#                     if not place.get('permanently_closed', False)
+#                 ]
+#
+#     # Get top 15 restaurants according to macro
+#     # SQL stuff
+#     # Rank restaurants by average of top 5 meals offered
+#     # Return the top 15 restaurants
+#
+#     ranking_query = f"""
+#     SELECT
+#         r.restaurant_name,
+#         AVG(n.{macro}) AS average_macro
+#     FROM
+#         restaurant_information r
+#     JOIN
+#         nutrition_facts n ON r.restaurant_name = n.restaurant_name
+#     GROUP BY
+#         r.restaurant_name
+#     ORDER BY
+#         average_macro DESC
+#     LIMIT 15;
+#     """
+#
+#     restaurants = db.session.execute(ranking_query).fetchall()
+#
+#     # restaurant_list = [{'restaurant_name': row[0], 'average_macro': row[1]} for row in top_restaurants]
+#     # return jsonify(restaurant_list), 200
+#
+#
+#     # Survey Google Distance Matrix API to get distances from user location
+#     # For each restaurant returned by ^^, call googlemaps.get_travel_distance(user coords, dest coords, mode of transport)
+#     # store restaurant names + distances + durations in JSON
+#
+#     for i in range(len(restaurants)):
+#         info = googlemaps.get_travel_distance(user_lat=latitude, user_lng=longitude, dest_lat=restaurants[i]['location']['lat'], dest_lng=restaurants[i]['location']['lng'])
+#         restaurants[i] = {'name': restaurants[i]['name'], 'address': restaurants[i]['address'], 'distance': info['distance'], 'duration': info['duration']}
+#
+#     # Return top 15 restaurants with distances
+#
+#     return restaurants
+
 @app.route('/restaurants', methods=["POST"])
 def get_restaurants():
     data = request.get_json()
     macro = data.get('macro')
     latitude = data.get('latitude')
     longitude = data.get('longitude')
-    radius = data.get('radius') * 1609.34 # miles to meters
-    print(data)
-    # Survey Google Places API for restaurants in radius
+    radius = data.get('radius') * 1609.34  # miles to meters
+
+    # Survey Google Places API for restaurants in the specified radius
     response = googlemaps.get_nearby_restaurants(latitude=latitude, longitude=longitude, radius=radius)
 
     restaurants = [
-                    {
-                        'name': place['name'], 
-                        'location': place['geometry']['location'],
-                        'address': place['vicinity']
-                    }
-                    for place in response['results'] 
-                    if not place.get('permanently_closed', False)
-                ]
-    
-    # Get top 15 restaurants according to macro
-    # SQL stuff
-    # Rank restaurants by average of top 5 meals offered
-    # Return the top 15 restaurants
+        {
+            'name': place['name'],
+            'location': place['geometry']['location'],
+            'address': place['vicinity']
+        }
+        for place in response['results']
+        if not place.get('permanently_closed', False)
+    ]
 
-    ranking_query = f"""
+    # Construct the ranking query dynamically using safe parameterization
+    ranking_query = text(f"""
     SELECT
         r.restaurant_name,
         AVG(n.{macro}) AS average_macro
@@ -135,25 +206,20 @@ def get_restaurants():
     ORDER BY
         average_macro DESC
     LIMIT 15;
-    """
+    """)
 
-    restaurants = db.session.execute(ranking_query).fetchall()
+    # Execute the query and fetch results
+    top_restaurants = db.session.execute(ranking_query).fetchall()
 
-    # restaurant_list = [{'restaurant_name': row[0], 'average_macro': row[1]} for row in top_restaurants]
-    # return jsonify(restaurant_list), 200
-
+    restaurant_list = [{'restaurant_name': row[0], 'average_macro': row[1]} for row in top_restaurants]
 
     # Survey Google Distance Matrix API to get distances from user location
-    # For each restaurant returned by ^^, call googlemaps.get_travel_distance(user coords, dest coords, mode of transport)
-    # store restaurant names + distances + durations in JSON
-
-    for i in range(len(restaurants)):
+    for i in range(len(restaurant_list)):
         info = googlemaps.get_travel_distance(user_lat=latitude, user_lng=longitude, dest_lat=restaurants[i]['location']['lat'], dest_lng=restaurants[i]['location']['lng'])
-        restaurants[i] = {'name': restaurants[i]['name'], 'address': restaurants[i]['address'], 'distance': info['distance'], 'duration': info['duration']}
+        restaurant_list[i].update({'distance': info['distance'], 'duration': info['duration']})
 
-    # Return top 15 restaurants with distances 
-
-    return restaurants
+    # Return top 15 restaurants with distances
+    return jsonify(restaurant_list), 200
 
 @app.route('/dishes', methods=['POST'])
 def get_dishes():
@@ -169,7 +235,7 @@ def get_dishes():
             item,
             {macro}
         FROM
-            nutrition_facts
+            nutrition_facts,
         WHERE
             restaurant_name = :restaurant
         ORDER BY
@@ -203,4 +269,4 @@ def get_dishes():
     # return dishes
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(port=4000, debug=True)

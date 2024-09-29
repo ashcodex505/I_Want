@@ -6,7 +6,7 @@ services:
     image: abhaveabhilash/flask_app:latest
     build: .
     ports:
-      - "5000:5000"
+      - "4000:4000"
     depends_on:
       - flask_db
     environment:
