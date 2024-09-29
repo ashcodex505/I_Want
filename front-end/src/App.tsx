@@ -1,11 +1,11 @@
 
-import { BrowserRouter, Navigate, Routes, Route  } from "react-router-dom"
-import { UseSelector } from "react-redux"
+import { BrowserRouter,  Routes, Route  } from "react-router-dom"
+
 import SignUpPage from "./pages/SignUpPage"
 import WhatIWant from "./pages/WhatIWant"
-import HomePage from "./pages/Map"
+
 import { CssBaseline } from "@mui/material"
-import ProtectedRoute from "./ProtectedRoute"
+
 import MapPage from "./pages/Map"
 import Restaurant from "./pages/Restaurant"
 import MealsPage from "./pages/MealsPage"

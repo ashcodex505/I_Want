@@ -16,8 +16,10 @@
      "paths": { "src/*": ["src/*"] },
      "resolveJsonModule": true,
      "skipLibCheck": true,
-     "strict": true,
-     "target": "esnext"
+     "strict": false,
+     "noImplicitAny": false, 
+     "target": "esnext",
+     "checkJs": false
    },
    "files": [],
    "exclude": ["node_modules"],

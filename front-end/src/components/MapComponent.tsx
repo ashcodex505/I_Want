@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { GoogleMap, LoadScript, Marker, StandaloneSearchBox, Box } from '@react-google-maps/api';
+import { GoogleMap, LoadScript, Marker, StandaloneSearchBox } from '@react-google-maps/api';
 import { Button, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -23,12 +23,12 @@ const MapWithGeolocation: React.FC = () => {
     
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const restaurants = useSelector((state)=> state.restaurants)
+    const restaurants = useSelector((state: any)=> state.restaurants)
     const [currentPosition, setCurrentPosition] = useState<Coordinates | null>(null);
     // const [selectedPosition, setSelectedPosition] = useState<Coordinates | null>(null);
     const [searchBox, setSearchBox] = useState<google.maps.places.SearchBox | null>(null);
     const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-    const macro = useSelector((state)=> state.macro);
+    const macro = useSelector((state: any)=> state.macro);
     useEffect(() => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -89,8 +89,8 @@ const MapWithGeolocation: React.FC = () => {
             },
             body: JSON.stringify({
               'macro': macro, 
-              "latitude": currentPosition.lat,
-              "longitude": currentPosition.lng,
+              "latitude": currentPosition?.lat,
+              "longitude": currentPosition?.lng,
               "radius": 1
 
             }),
