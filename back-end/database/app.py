@@ -14,7 +14,6 @@ db = SQLAlchemy(app)
 # Define the NutritionFacts model without any foreign key relationships
 class NutritionFacts(db.Model):
     __tablename__ = 'nutrition_facts'
-
     nutrition_facts_id = db.Column(db.Integer, primary_key=True)  # Unique identifier
     item = db.Column(db.String(100), nullable=False)  # Name of the item
     restaurant_name = db.Column(db.String(100), nullable=False)  # Name of the restaurant
@@ -26,7 +25,6 @@ class NutritionFacts(db.Model):
 # Define the RestaurantInformation model without any foreign key relationships
 class RestaurantInformation(db.Model):
     __tablename__ = 'restaurant_information'
-
     restaurant_id = db.Column(db.Integer, primary_key=True)  # Unique identifier
     restaurant_name = db.Column(db.String(100), nullable=False)  # Name of the restaurant
     calories_per_dollar = db.Column(db.Numeric(5, 2), nullable=True)  # Calories per dollar
@@ -70,6 +68,27 @@ def add_restaurant_information():
     db.session.commit()
 
     return jsonify({"message": "Restaurant Information added successfully"}), 201
+
+@app.route('/load_nutrition_information', methods=['POST'])
+def add_nutrition_information():
+    data = request.get_json()
+
+    # Insert nutrition facts with foreign key dependency
+    nutrition_facts = NutritionFacts(
+        item=data['item'],
+        restaurant_name=data['restaurant_name'],
+        calories=data['calories'],
+        carbohydrates_g=data['carbohydrates_g'],
+        dietary_fiber_g=data['dietary_fiber_g'],
+        protein_g=data['protein_g']
+    )
+
+    db.session.add(nutrition_facts)
+    db.session.commit()
+
+    return jsonify({"message": "Nutrition Facts added successfully"}), 201
+
+@app.route('get_protein')
 
 
 if __name__ == '__main__':
